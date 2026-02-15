@@ -9,8 +9,8 @@ const client = new Client({
   ]
 });
 
-// PODERES
-const poderez = {
+// HERANÇAS
+const herancas = {
   "Mercenario": "💴 Mercenário",
   "Comerciante": "💰 Comerciante"
 };
@@ -28,40 +28,40 @@ client.on('messageCreate', async (message) => {
   const args = message.content.split(" ");
   const comando = args[0];
 
-  // DAR PODERES
-  if (comando === "!darpoderez") {
+  // DAR HERANÇA
+  if (comando === "!darheranca") {
     if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator))
-      return message.reply("Você não tem permissão, peça para um adm.");
+      return message.reply("Você não tem permissão.");
 
     const membro = message.mentions.members.first();
-    const nomePoderez = args[2];
+    const nomeHeranca = args[2];
 
-    if (!membro || !poderes[nomepoderes])
-      return message.reply("Use: !darpoderes @usuario Mercenario ou Comerciante");
+    if (!membro || !herancas[nomeHeranca])
+      return message.reply("Use: !darheranca @usuario Mercenario ou Comerciante");
 
     if (!usuarios[membro.id]) usuarios[membro.id] = [];
     if (!saldo[membro.id]) saldo[membro.id] = 0;
 
-    usuarios[membro.id].push(nomePoderes);
+    usuarios[membro.id].push(nomeHeranca);
 
-    let role = message.guild.roles.cache.find(r => r.name === poderes[nomepoderes]);
+    let role = message.guild.roles.cache.find(r => r.name === herancas[nomeHeranca]);
 
     if (!role) {
       role = await message.guild.roles.create({
-        name: poderes[nomePoderes],
-        reason: "Cargo de poderes"
+        name: herancas[nomeHeranca],
+        reason: "Cargo de Herança"
       });
     }
 
     await membro.roles.add(role);
 
-    message.channel.send(`🔥 ${membro.user.username} recebeu o Poderes ${nomePoderes}`);
+    message.channel.send(`🔥 ${membro.user.username} recebeu a Herança ${nomeHeranca}`);
   }
 
   // COMANDO DINHEIRO (MERCENARIO)
   if (comando === "!dinheiro") {
     if (!usuarios[message.author.id]?.includes("Mercenario"))
-      return message.reply("Você não possui o Poder Mercenário.");
+      return message.reply("Você não possui a Herança Mercenário.");
 
     if (!saldo[message.author.id]) saldo[message.author.id] = 0;
 
@@ -80,7 +80,7 @@ client.on('messageCreate', async (message) => {
   // TROCAR (COMERCIANTE)
   if (comando === "!trocar") {
     if (!usuarios[message.author.id]?.includes("Comerciante"))
-      return message.reply("Você não possui o Poder Comerciante.");
+      return message.reply("Você não possui a Herança Comerciante.");
 
     const membro = message.mentions.members.first();
     const valor = parseInt(args[2]);
